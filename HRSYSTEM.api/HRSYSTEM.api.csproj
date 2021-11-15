@@ -14,4 +14,11 @@
     <Folder Include="Controllers\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\HRSYSTEM.application\HRSYSTEM.application.csproj" />
+    <ProjectReference Include="..\HRSYSTEM.persistance\HRSYSTEM.persistance.csproj" />
+  </ItemGroup>
+
+  <ProjectExtensions><VisualStudio><UserProperties properties_4launchsettings_1json__JsonSchema="" /></VisualStudio></ProjectExtensions>
+
 </Project>
