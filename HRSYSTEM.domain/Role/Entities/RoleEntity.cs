@@ -1,4 +1,4 @@
-﻿namespace HRSYSTEM.domain.Role.Entities
+﻿namespace HRSYSTEM.domain
 {
     /// <summary>
     /// This is the main Role Entity

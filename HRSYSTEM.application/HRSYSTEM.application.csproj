@@ -11,4 +11,12 @@
     <ProjectReference Include="..\HRSYSTEM.persistance\HRSYSTEM.persistance.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Helpers\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="8.1.1" />
+  </ItemGroup>
+
 </Project>
