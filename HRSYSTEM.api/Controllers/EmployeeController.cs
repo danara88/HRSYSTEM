@@ -58,6 +58,37 @@ namespace HRSYSTEM.api.Controllers
             return Ok(employeeDTO);
         }
 
+        /// <summary>
+        /// This action will update an employee
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="employeeDTO"></param>
+        /// <returns></returns>
+        [HttpPut]
+        [Route("~/api/employees/{id}")]
+        public async Task<ActionResult> UpdateEmployeeById(int id, [FromBody] EmployeeDTO employeeDTO)
+        {
+            var employee = _mapper.Map<EmployeeEntity>(employeeDTO);
+            employee.EmployeeID = id;
+            var result = await _employeeRepository.UpdateEmployee(employee);
+            if (!result) return BadRequest();
+            return Ok();
+        }
+
+        /// <summary>
+        /// This action deletes an employee
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [HttpDelete]
+        [Route("~/api/employees/{id}")]
+        public async Task<ActionResult> DeleteEmployeeById(int id)
+        {
+            var result = await _employeeRepository.DeleteEmployee(id);
+            if (!result) return BadRequest();
+            return Ok();
+        }
+
 
 
     }

@@ -23,9 +23,14 @@
         public string MiddleName { get; set; }
 
         /// <summary>
-        /// Employee's age
+        /// Employee's work email
         /// </summary>
-        public int Age { get; set; }
+        public string WorkEmail { get; set; }
+
+        /// <summary>
+        /// Employee's telephone
+        /// </summary>
+        public string Telephone { get; set; }
 
         /// <summary>
         /// Employee's status Ex. 2 = Active, 1 = Inactive

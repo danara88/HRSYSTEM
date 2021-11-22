@@ -20,6 +20,14 @@ namespace HRSYSTEM.persistance.Repositories.Employee
             await _context.SaveChangesAsync();
         }
 
+        public async Task<bool> DeleteEmployee(int id)
+        {
+            var currentEmployee = await GetEmployee(id);
+            _context.Employees.Remove(currentEmployee);
+
+            return await _context.SaveChangesAsync() > 0;
+        }
+
         public async Task<EmployeeEntity> GetEmployee(int id)
         {
             var employee = await _context.Employees.FirstOrDefaultAsync(x => x.EmployeeID == id);
@@ -30,6 +38,22 @@ namespace HRSYSTEM.persistance.Repositories.Employee
         {
             var employees = await _context.Employees.ToListAsync();
             return employees;
+        }
+
+        public async Task<bool> UpdateEmployee(EmployeeEntity employee)
+        {
+            var currentEmployee = await GetEmployee(employee.EmployeeID);
+
+            currentEmployee.FirstName = employee.FirstName;
+            currentEmployee.LastName = employee.LastName;
+            currentEmployee.MiddleName = employee.MiddleName;
+            currentEmployee.WorkEmail = employee.WorkEmail;
+            currentEmployee.Telephone = employee.Telephone;
+            currentEmployee.Status = employee.Status;
+            currentEmployee.UpdatedOn = DateTime.Now;
+
+            return await _context.SaveChangesAsync() > 0;
+
         }
     }
 }

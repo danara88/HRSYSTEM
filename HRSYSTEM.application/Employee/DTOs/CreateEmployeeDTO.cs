@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using HRSYSTEM.domain;
 
 namespace HRSYSTEM.application
 {
@@ -26,14 +22,19 @@ namespace HRSYSTEM.application
         /// </summary>
         public string MiddleName { get; set; }
 
-        /// <summary>
-        /// Employee's age
+        // <summary>
+        /// Employee's work email
         /// </summary>
-        public int Age { get; set; }
+        public string WorkEmail { get; set; }
+
+        /// <summary>
+        /// Employee's telephone
+        /// </summary>
+        public string Telephone { get; set; }
 
         /// <summary>
         /// Employee's status Ex. 2 = Active, 1 = Inactive
         /// </summary>
-        public int Status { get; set; }
+        public StatusEmployeeEnum Status { get; set; }
     }
 }
