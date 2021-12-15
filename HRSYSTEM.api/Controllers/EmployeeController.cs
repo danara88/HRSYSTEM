@@ -4,18 +4,17 @@ using HRSYSTEM.domain;
 using HRSYSTEM.persistance.Repositories.Employee;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using MediatR;
 
 namespace HRSYSTEM.api.Controllers
 {
     [ApiController]
     public class EmployeeController : ControllerBase
     {
-        private readonly IMapper _mapper;
-        private readonly IEmployeeRepository _employeeRepository;
-        public EmployeeController(IMapper mapper, IEmployeeRepository employeeRepository)
+        private readonly IMediator _mediator;
+        public EmployeeController(IMediator mediator)
         {
-            _mapper = mapper;
-            _employeeRepository = employeeRepository;
+            _mediator = mediator;
         }
 
         /// <summary>
@@ -25,11 +24,11 @@ namespace HRSYSTEM.api.Controllers
         /// <returns></returns>
         [HttpPost]
         [Route("~/api/employees")]
-        public async Task<ActionResult> CreateEmployee([FromBody] CreateEmployeeDTO employeeDTO)
+        public async Task<ActionResult> CreateEmployee([FromBody] CreateEmployeeCommand model)
         {
-            var employee = _mapper.Map<EmployeeEntity>(employeeDTO);
-            await _employeeRepository.CreateEmployee(employee);
-            return Ok();
+            if (!ModelState.IsValid) return BadRequest();
+            CreateEmployeeDTO response = await _mediator.Send(model);
+            return Ok(response);
         }
            
         /// <summary>
@@ -40,9 +39,24 @@ namespace HRSYSTEM.api.Controllers
         [Route("~/api/employees")]
         public async Task<ActionResult<IEnumerable<GetEmployeesDTO>>> GetAllEmployees()
         {
-            var employees = await _employeeRepository.GetEmployees();
-            var employeesDTO = _mapper.Map<IEnumerable<GetEmployeesDTO>>(employees);
+            if (!ModelState.IsValid) return BadRequest();
+            IEnumerable<GetEmployeesDTO> employeesDTO = await _mediator.Send(new GetEmployeesQuery());
             return Ok(employeesDTO);
+
+        }
+
+        /// <summary>
+        /// This action will return employees depending of their status
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet]
+        [Route("~/api/employeesByStatus")]
+        public async Task<ActionResult<IEnumerable<GetEmployeesDTO>>> GetEmployeesByStatus([FromQuery] int Status = 1)
+        {
+            if (!ModelState.IsValid) return BadRequest();
+            IEnumerable<GetEmployeesDTO> employeesDTO = await _mediator.Send(new GetEmployeesByStatusQuery(Status));
+            return Ok(employeesDTO);
+
         }
 
         /// <summary>
@@ -50,11 +64,11 @@ namespace HRSYSTEM.api.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet]
-        [Route("~/api/employees/{id}")]
+        [Route("~/api/employee/{id}")]
         public async Task<ActionResult<EmployeeDTO>> GetEmployeeById(int id)
         {
-            var employee = await _employeeRepository.GetEmployee(id);
-            var employeeDTO = _mapper.Map<EmployeeDTO>(employee);
+            if (!ModelState.IsValid) return BadRequest();
+            EmployeeDTO employeeDTO = await _mediator.Send(new GetEmployeeQuery(id));
             return Ok(employeeDTO);
         }
 
@@ -66,27 +80,26 @@ namespace HRSYSTEM.api.Controllers
         /// <returns></returns>
         [HttpPut]
         [Route("~/api/employees/{id}")]
-        public async Task<ActionResult> UpdateEmployeeById(int id, [FromBody] EmployeeDTO employeeDTO)
+        public async Task<ActionResult> UpdateEmployeeById(int id, [FromBody] UpdateEmployeeCommand model)
         {
-            var employee = _mapper.Map<EmployeeEntity>(employeeDTO);
-            employee.EmployeeID = id;
-            var result = await _employeeRepository.UpdateEmployee(employee);
-            if (!result) return BadRequest();
-            return Ok();
+            if (!ModelState.IsValid) return BadRequest();
+            EmployeeDTO employeeDTO = await _mediator.Send(model);
+            return Ok(employeeDTO);
         }
 
         /// <summary>
-        /// This action deletes an employee
+        /// This action will terminate an employee
         /// </summary>
         /// <param name="id"></param>
+        /// <param name="model"></param>
         /// <returns></returns>
-        [HttpDelete]
-        [Route("~/api/employees/{id}")]
-        public async Task<ActionResult> DeleteEmployeeById(int id)
+        [HttpPut]
+        [Route("~/api/employees/changeStatus")]
+        public async Task<ActionResult<EmployeeDTO>> TerminateEmployeeById([FromBody] ChangeEmployeeStatusCommand model)
         {
-            var result = await _employeeRepository.DeleteEmployee(id);
-            if (!result) return BadRequest();
-            return Ok();
+            if (!ModelState.IsValid) return BadRequest();
+            EmployeeDTO employeeDTO = await _mediator.Send(model);
+            return Ok(employeeDTO);
         }
 
 

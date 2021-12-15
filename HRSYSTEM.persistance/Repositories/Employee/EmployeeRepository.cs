@@ -20,11 +20,24 @@ namespace HRSYSTEM.persistance.Repositories.Employee
             await _context.SaveChangesAsync();
         }
 
-        public async Task<bool> DeleteEmployee(int id)
+        public async Task<bool> UpdateStatusEmployee(EmployeeEntity employee, int status)
         {
-            var currentEmployee = await GetEmployee(id);
-            _context.Employees.Remove(currentEmployee);
+            var currentEmployee = await GetEmployee(employee.EmployeeID);
 
+            if (status == StatusEmployeeEnum.Terminated.GetHashCode())
+            {
+                currentEmployee.Status = StatusEmployeeEnum.Terminated;
+            }
+            if (status == StatusEmployeeEnum.Inactive.GetHashCode())
+            {
+                currentEmployee.Status = StatusEmployeeEnum.Inactive;
+            }
+            if (status == StatusEmployeeEnum.Active.GetHashCode())
+            {
+                currentEmployee.Status = StatusEmployeeEnum.Active;
+            }
+
+            currentEmployee.UpdatedOn = DateTime.Now;
             return await _context.SaveChangesAsync() > 0;
         }
 
@@ -38,6 +51,13 @@ namespace HRSYSTEM.persistance.Repositories.Employee
         {
             var employees = await _context.Employees.ToListAsync();
             return employees;
+        }
+
+        public async Task<IEnumerable<EmployeeEntity>> GetEmployeesByStatus (int status)
+        {
+            var employees = await _context.Employees.ToListAsync();
+            var employeesFilter = employees.Where(x => x.Status.GetHashCode() == status).AsEnumerable<EmployeeEntity>();
+            return employeesFilter;
         }
 
         public async Task<bool> UpdateEmployee(EmployeeEntity employee)

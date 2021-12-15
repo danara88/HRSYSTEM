@@ -4,7 +4,9 @@ using Microsoft.EntityFrameworkCore;
 using HRSYSTEM.application.Mapping;
 using HRSYSTEM.persistance.Repositories.Employee;
 using FluentValidation.AspNetCore;
-using HRSYSTEM.persistance.Filters;
+using MediatR;
+using System.Reflection;
+using Microsoft.AspNetCore.Authentication;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -35,19 +37,12 @@ builder.Services.AddTransient<IEmployeeRepository, EmployeeRepository>();
 // Add jwt token authentication
 builder.Services.AddTokenAuthentication(builder.Configuration);
 
+// Add mediator
+builder.Services.AddMediatR(AppDomain.CurrentDomain.GetAssemblies());
+
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-
-// Add fluent validator and filters
-builder.Services.AddMvc(options =>
-{
-    options.Filters.Add<ValidatorFilter>();
-})
-.AddFluentValidation(options =>
-{
-    options.RegisterValidatorsFromAssemblies(AppDomain.CurrentDomain.GetAssemblies());
-});
 
 var app = builder.Build();
 

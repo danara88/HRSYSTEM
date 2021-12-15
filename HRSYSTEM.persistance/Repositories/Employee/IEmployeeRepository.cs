@@ -11,6 +11,7 @@ namespace HRSYSTEM.persistance.Repositories.Employee
         Task<EmployeeEntity> GetEmployee(int id);
         Task CreateEmployee(EmployeeEntity employee);
         Task<bool> UpdateEmployee(EmployeeEntity employee);
-        Task<bool> DeleteEmployee(int id);
+        Task<bool> UpdateStatusEmployee(EmployeeEntity employee, int status);
+        Task<IEnumerable<EmployeeEntity>> GetEmployeesByStatus(int status);
     }
 }
