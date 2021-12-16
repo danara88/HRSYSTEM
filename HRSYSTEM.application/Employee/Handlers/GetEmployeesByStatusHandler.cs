@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using HRSYSTEM.domain;
 using HRSYSTEM.persistance.Repositories.Employee;
 using MediatR;
 
@@ -23,7 +24,7 @@ namespace HRSYSTEM.application
                 var employees = await _employeeRepository.GetEmployeesByStatus(request.Status);
                 return _mapper.Map<IEnumerable<GetEmployeesDTO>>(employees);
             } 
-            throw new Exception("Invalid status option");
+            throw new BusinessException("Invalid status option");
         }
     }
 }

@@ -16,12 +16,14 @@ namespace HRSYSTEM.persistance.Context
         public virtual DbSet<UserEntity> Users { get; set; }
         public virtual DbSet<RoleEntity> Roles { get; set; }
         public virtual DbSet<EmployeeEntity> Employees { get; set; }
+        public virtual DbSet<JobCatalogEntity> JobCatalogs { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.ApplyConfiguration(new UserConfiguration());
             modelBuilder.ApplyConfiguration(new RoleConfiguration());
             modelBuilder.ApplyConfiguration(new EmployeeConfiguration());
+            modelBuilder.ApplyConfiguration(new JobCatalogConfiguration());
         }
 
     }

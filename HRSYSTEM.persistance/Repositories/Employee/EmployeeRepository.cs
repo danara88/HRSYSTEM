@@ -43,7 +43,7 @@ namespace HRSYSTEM.persistance.Repositories.Employee
 
         public async Task<EmployeeEntity> GetEmployee(int id)
         {
-            var employee = await _context.Employees.FirstOrDefaultAsync(x => x.EmployeeID == id);
+            var employee = await _context.Employees.Include(x => x.JobCatalog).FirstOrDefaultAsync(x => x.EmployeeID == id);
             return employee;
         }
 

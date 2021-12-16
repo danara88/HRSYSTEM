@@ -7,6 +7,7 @@ using FluentValidation.AspNetCore;
 using MediatR;
 using System.Reflection;
 using Microsoft.AspNetCore.Authentication;
+using HRSYSTEM.persistance;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -14,7 +15,10 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
         options.UseSqlServer(builder.Configuration.GetConnectionString("Default"), b => b.MigrationsAssembly("HRSYSTEM.api")));
 
-builder.Services.AddControllers().AddNewtonsoftJson(options =>
+builder.Services.AddControllers(options =>
+{
+    options.Filters.Add<GlobalExceptionFilter>();
+}).AddNewtonsoftJson(options =>
 {
     // Ignore loop reference
     options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
@@ -33,6 +37,7 @@ builder.Services.AddAutoMapper(typeof(ApplicationMapper));
 
 // Configure Repositories
 builder.Services.AddTransient<IEmployeeRepository, EmployeeRepository>();
+builder.Services.AddTransient<IJobCatalogRepository, JobCatalogRepository>();
 
 // Add jwt token authentication
 builder.Services.AddTokenAuthentication(builder.Configuration);

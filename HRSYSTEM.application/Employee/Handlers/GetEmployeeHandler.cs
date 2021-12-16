@@ -21,6 +21,7 @@ namespace HRSYSTEM.application
         {
             var employee = await _employeeRepository.GetEmployee(request.id);
             var employeeDTO = _mapper.Map<EmployeeDTO>(employee);
+           
             return employeeDTO;
         }
     }

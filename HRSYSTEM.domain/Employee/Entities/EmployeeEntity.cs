@@ -11,6 +11,11 @@
         public int EmployeeID { get; set; }
 
         /// <summary>
+        /// Employee's job relation ID
+        /// </summary>
+        public int JobCatalogID { get; set; }
+
+        /// <summary>
         /// Employee's firstname
         /// </summary>
         public string FirstName { get; set; }
@@ -49,5 +54,11 @@
         /// When the record was updated
         /// </summary>
         public DateTime UpdatedOn { get; set; }
+
+        /// <summary>
+        /// Job Catalog detail
+        /// </summary>
+        public JobCatalogEntity JobCatalog { get; set; }
+
     }
 }

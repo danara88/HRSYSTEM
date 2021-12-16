@@ -20,12 +20,12 @@ namespace HRSYSTEM.application.Employee.Handlers
         public async Task<EmployeeDTO> Handle(ChangeEmployeeStatusCommand request, CancellationToken cancellationToken)
         {
             EmployeeEntity? employee = await _employeeRepository.GetEmployee(request.EmployeeID);
-            if (employee == null) throw new Exception("The employee does not exist");
+            if (employee == null) throw new BusinessException("The employee does not exist");
 
             employee.EmployeeID = request.EmployeeID;
 
             bool updateEmployee = await _employeeRepository.UpdateStatusEmployee(employee, request.Status);
-            if (!updateEmployee) throw new Exception("Employee was not updated.");
+            if (!updateEmployee) throw new BusinessException("Employee was not updated.");
 
             return _mapper.Map<EmployeeDTO>(employee);
         }

@@ -24,10 +24,18 @@ namespace HRSYSTEM.application
         }
         public async Task<CreateEmployeeDTO> Handle(CreateEmployeeCommand request, CancellationToken cancellationToken)
         {
-            var employee = _mapper.Map<EmployeeEntity>(request);
-            await _employeeRepository.CreateEmployee(employee);
+            try
+            {
+                var employee = _mapper.Map<EmployeeEntity>(request);
+                await _employeeRepository.CreateEmployee(employee);
 
-            return _mapper.Map<CreateEmployeeDTO>(employee);
+                return _mapper.Map<CreateEmployeeDTO>(employee);
+            }
+            catch(System.Exception)
+            {
+                throw new BusinessException("Something went wrong. We can not create the employee.");
+            }
+
         }
     }
 }

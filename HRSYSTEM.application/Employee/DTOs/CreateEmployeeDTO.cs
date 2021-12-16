@@ -22,6 +22,11 @@ namespace HRSYSTEM.application
         /// </summary>
         public string MiddleName { get; set; }
 
+        /// <summary>
+        /// Employee's job
+        /// </summary>
+        public int JobCatalogID { get; set; }
+
         // <summary>
         /// Employee's work email
         /// </summary>

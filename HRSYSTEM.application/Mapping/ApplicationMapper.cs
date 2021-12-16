@@ -1,10 +1,5 @@
 ﻿using AutoMapper;
 using HRSYSTEM.domain;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace HRSYSTEM.application.Mapping
 {
@@ -23,6 +18,11 @@ namespace HRSYSTEM.application.Mapping
             CreateMap<EmployeeEntity, EmployeeDTO>();
             CreateMap<EmployeeDTO, EmployeeEntity>();
             #endregion Employee
+
+            #region JobCatalog
+            CreateMap<JobCatalogEntity, JobCatalogDTO>();
+            CreateMap<JobCatalogDTO, JobCatalogEntity>();
+            #endregion
 
         }
     }

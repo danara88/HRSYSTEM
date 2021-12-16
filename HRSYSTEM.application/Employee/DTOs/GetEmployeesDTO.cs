@@ -21,6 +21,11 @@
         /// Employee's middlename
         /// </summary>
         public string MiddleName { get; set; }
+        
+        /// <summary>
+        /// Employee's job catalog ID
+        /// </summary>
+        public int JobCatalogID { get; set; }
 
         // <summary>
         /// Employee's work email
@@ -36,5 +41,10 @@
         /// Employee's status Ex. 2 = Active, 1 = Inactive
         /// </summary>
         public int Status { get; set; }
+
+        /// <summary>
+        /// Employee's job catalog detail
+        /// </summary>
+        public virtual JobCatalogDTO JobCatalog { get; set; }
     }
 }

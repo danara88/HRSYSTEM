@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace HRSYSTEM.api.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20211121025303_AddEmployeeProperties")]
-    partial class AddEmployeeProperties
+    [Migration("20211216030214_Create_tablesdb")]
+    partial class Create_tablesdb
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -39,6 +39,9 @@ namespace HRSYSTEM.api.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int>("JobCatalogID")
+                        .HasColumnType("int");
+
                     b.Property<string>("LastName")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -63,7 +66,40 @@ namespace HRSYSTEM.api.Migrations
 
                     b.HasKey("EmployeeID");
 
+                    b.HasIndex("JobCatalogID");
+
                     b.ToTable("Employees");
+                });
+
+            modelBuilder.Entity("HRSYSTEM.domain.JobCatalogEntity", b =>
+                {
+                    b.Property<int>("JobCatalogID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("JobCatalogID"), 1L, 1);
+
+                    b.Property<DateTime>("CreatedOn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("JobFunction")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("JobSubFunction")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("JobTitle")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("UpdatedOn")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("JobCatalogID");
+
+                    b.ToTable("JobCatalogs");
                 });
 
             modelBuilder.Entity("HRSYSTEM.domain.RoleEntity", b =>
@@ -132,6 +168,17 @@ namespace HRSYSTEM.api.Migrations
                     b.HasKey("UserID");
 
                     b.ToTable("Users");
+                });
+
+            modelBuilder.Entity("HRSYSTEM.domain.EmployeeEntity", b =>
+                {
+                    b.HasOne("HRSYSTEM.domain.JobCatalogEntity", "JobCatalog")
+                        .WithMany()
+                        .HasForeignKey("JobCatalogID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("JobCatalog");
                 });
 #pragma warning restore 612, 618
         }

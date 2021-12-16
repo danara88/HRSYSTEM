@@ -19,11 +19,19 @@ namespace HRSYSTEM.application
         }
         public async Task<EmployeeDTO> Handle(UpdateEmployeeCommand request, CancellationToken cancellationToken)
         {
-            var employee = _mapper.Map<EmployeeEntity>(request);
-            employee.EmployeeID = request.id;
-            bool result = await _employeeRepository.UpdateEmployee(employee);
+            try
+            {
+                var employee = _mapper.Map<EmployeeEntity>(request);
+                employee.EmployeeID = request.id;
+                bool result = await _employeeRepository.UpdateEmployee(employee);
 
-            return _mapper.Map<EmployeeDTO>(employee);
+                return _mapper.Map<EmployeeDTO>(employee);
+            }
+            catch (System.Exception)
+            {
+                throw new BusinessException("Something went wrong. We can not update the employee.");
+            }
+            
         }
     }
 }
