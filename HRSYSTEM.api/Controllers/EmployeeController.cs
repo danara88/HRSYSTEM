@@ -24,11 +24,11 @@ namespace HRSYSTEM.api.Controllers
         /// <returns></returns>
         [HttpPost]
         [Route("~/api/employees")]
-        public async Task<ActionResult> CreateEmployee([FromBody] CreateEmployeeCommand model)
+        public async Task<ActionResult<ApiResponse<CreateEmployeeDTO>>> CreateEmployee([FromBody] CreateEmployeeCommand model)
         {
             if (!ModelState.IsValid) return BadRequest();
             CreateEmployeeDTO response = await _mediator.Send(model);
-            return Ok(response);
+            return Ok(new ApiResponse<CreateEmployeeDTO>(response));
         }
            
         /// <summary>
@@ -37,11 +37,11 @@ namespace HRSYSTEM.api.Controllers
         /// <returns></returns>
         [HttpGet]
         [Route("~/api/employees")]
-        public async Task<ActionResult<IEnumerable<GetEmployeesDTO>>> GetAllEmployees()
+        public async Task<ActionResult<ApiResponse<IEnumerable<GetEmployeesDTO>>>> GetAllEmployees()
         {
             if (!ModelState.IsValid) return BadRequest();
             IEnumerable<GetEmployeesDTO> employeesDTO = await _mediator.Send(new GetEmployeesQuery());
-            return Ok(employeesDTO);
+            return Ok(new ApiResponse<IEnumerable<GetEmployeesDTO>>(employeesDTO));
 
         }
 
@@ -51,11 +51,11 @@ namespace HRSYSTEM.api.Controllers
         /// <returns></returns>
         [HttpGet]
         [Route("~/api/employeesByStatus")]
-        public async Task<ActionResult<IEnumerable<GetEmployeesDTO>>> GetEmployeesByStatus([FromQuery] int Status = 1)
+        public async Task<ActionResult<ApiResponse<IEnumerable<GetEmployeesDTO>>>> GetEmployeesByStatus([FromQuery] int Status = 1)
         {
             if (!ModelState.IsValid) return BadRequest();
             IEnumerable<GetEmployeesDTO> employeesDTO = await _mediator.Send(new GetEmployeesByStatusQuery(Status));
-            return Ok(employeesDTO);
+            return Ok(new ApiResponse<IEnumerable<GetEmployeesDTO>>(employeesDTO));
 
         }
 
@@ -65,26 +65,25 @@ namespace HRSYSTEM.api.Controllers
         /// <returns></returns>
         [HttpGet]
         [Route("~/api/employee/{id}")]
-        public async Task<ActionResult<EmployeeDTO>> GetEmployeeById(int id)
+        public async Task<ActionResult<ApiResponse<EmployeeDTO>>> GetEmployeeById(int id)
         {
             if (!ModelState.IsValid) return BadRequest();
             EmployeeDTO employeeDTO = await _mediator.Send(new GetEmployeeQuery(id));
-            return Ok(employeeDTO);
+            return Ok(new ApiResponse<EmployeeDTO>(employeeDTO));
         }
 
         /// <summary>
         /// This action will update an employee
         /// </summary>
-        /// <param name="id"></param>
         /// <param name="employeeDTO"></param>
         /// <returns></returns>
         [HttpPut]
         [Route("~/api/employees/{id}")]
-        public async Task<ActionResult> UpdateEmployeeById(int id, [FromBody] UpdateEmployeeCommand model)
+        public async Task<ActionResult<ApiResponse<EmployeeDTO>>> UpdateEmployeeById([FromBody] UpdateEmployeeCommand model)
         {
             if (!ModelState.IsValid) return BadRequest();
             EmployeeDTO employeeDTO = await _mediator.Send(model);
-            return Ok(employeeDTO);
+            return Ok(new ApiResponse<EmployeeDTO>(employeeDTO));
         }
 
         /// <summary>
@@ -95,11 +94,11 @@ namespace HRSYSTEM.api.Controllers
         /// <returns></returns>
         [HttpPut]
         [Route("~/api/employees/changeStatus")]
-        public async Task<ActionResult<EmployeeDTO>> TerminateEmployeeById([FromBody] ChangeEmployeeStatusCommand model)
+        public async Task<ActionResult<ApiResponse<EmployeeDTO>>> TerminateEmployeeById([FromBody] ChangeEmployeeStatusCommand model)
         {
             if (!ModelState.IsValid) return BadRequest();
             EmployeeDTO employeeDTO = await _mediator.Send(model);
-            return Ok(employeeDTO);
+            return Ok(new ApiResponse<EmployeeDTO>(employeeDTO));
         }
 
 

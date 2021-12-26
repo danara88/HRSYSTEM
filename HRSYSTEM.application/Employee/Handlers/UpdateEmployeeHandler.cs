@@ -21,11 +21,30 @@ namespace HRSYSTEM.application
         {
             try
             {
-                var employee = _mapper.Map<EmployeeEntity>(request);
-                employee.EmployeeID = request.id;
-                bool result = await _employeeRepository.UpdateEmployee(employee);
+                var existEmployee = await _employeeRepository.GetEmployee(request.EmployeeID);
+                if (existEmployee != null)
+                {
+                    UpdateEmployeeDTO employeeToUpdate = new UpdateEmployeeDTO
+                    {
+                        EmployeeID = request.EmployeeID,
+                        FirstName = request.FirstName,
+                        MiddleName = request.MiddleName,
+                        LastName = request.LastName,
+                        JobCatalogID = request.JobCatalogID,
+                        WorkEmail = request.WorkEmail,
+                        Telephone = request.Telephone,
+                        Status = request.Status,
+                    };
 
-                return _mapper.Map<EmployeeDTO>(employee);
+                    var employee = _mapper.Map<EmployeeEntity>(employeeToUpdate);
+                
+                    bool result = await _employeeRepository.UpdateEmployee(employee);
+
+                    return _mapper.Map<EmployeeDTO>(employee);
+                } else
+                {
+                    throw new BusinessException("The employee does'nt exist.");
+                }
             }
             catch (System.Exception)
             {

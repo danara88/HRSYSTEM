@@ -11,17 +11,23 @@ namespace HRSYSTEM.application.Mapping
         public ApplicationMapper()
         {
             #region Employee
+
             CreateMap<EmployeeEntity, GetEmployeesDTO>();
             CreateMap<GetEmployeesDTO, EmployeeEntity>();
             CreateMap<EmployeeEntity, CreateEmployeeDTO>();
             CreateMap<CreateEmployeeDTO, EmployeeEntity>();
             CreateMap<EmployeeEntity, EmployeeDTO>();
             CreateMap<EmployeeDTO, EmployeeEntity>();
+            CreateMap<UpdateEmployeeDTO, EmployeeEntity>();
+            CreateMap<EmployeeEntity, UpdateEmployeeDTO>();
+
             #endregion Employee
 
             #region JobCatalog
+
             CreateMap<JobCatalogEntity, JobCatalogDTO>();
             CreateMap<JobCatalogDTO, JobCatalogEntity>();
+
             #endregion
 
         }

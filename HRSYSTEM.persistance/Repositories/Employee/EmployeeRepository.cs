@@ -16,6 +16,7 @@ namespace HRSYSTEM.persistance.Repositories.Employee
         }
         public async Task CreateEmployee(EmployeeEntity employee)
         {
+            employee.CreatedOn = DateTime.Now;
             _context.Add(employee);
             await _context.SaveChangesAsync();
         }
