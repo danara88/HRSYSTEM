@@ -1,10 +1,7 @@
-﻿using AutoMapper;
-using HRSYSTEM.application;
+﻿using HRSYSTEM.application;
 using HRSYSTEM.domain;
-using HRSYSTEM.persistance.Repositories.Employee;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
 using MediatR;
+using Microsoft.AspNetCore.Mvc;
 
 namespace HRSYSTEM.api.Controllers
 {
@@ -32,30 +29,30 @@ namespace HRSYSTEM.api.Controllers
         }
            
         /// <summary>
-        /// This action will return all the employees of the system
+        /// This method will return all the employees paginated
         /// </summary>
+        /// <param name="filters"></param>
         /// <returns></returns>
         [HttpGet]
         [Route("~/api/employees")]
-        public async Task<ActionResult<ApiResponse<IEnumerable<GetEmployeesDTO>>>> GetAllEmployees()
+        public async Task<ActionResult<ApiResponse<IEnumerable<GetEmployeesDTO>>>> GetAllEmployees([FromQuery] PaginateEmployeeQueryFilter filters)
         {
             if (!ModelState.IsValid) return BadRequest();
-            IEnumerable<GetEmployeesDTO> employeesDTO = await _mediator.Send(new GetEmployeesQuery());
-            return Ok(new ApiResponse<IEnumerable<GetEmployeesDTO>>(employeesDTO));
-
-        }
-
-        /// <summary>
-        /// This action will return employees depending of their status
-        /// </summary>
-        /// <returns></returns>
-        [HttpGet]
-        [Route("~/api/employeesByStatus")]
-        public async Task<ActionResult<ApiResponse<IEnumerable<GetEmployeesDTO>>>> GetEmployeesByStatus([FromQuery] int Status = 1)
-        {
-            if (!ModelState.IsValid) return BadRequest();
-            IEnumerable<GetEmployeesDTO> employeesDTO = await _mediator.Send(new GetEmployeesByStatusQuery(Status));
-            return Ok(new ApiResponse<IEnumerable<GetEmployeesDTO>>(employeesDTO));
+            PagedList<GetEmployeesDTO> employeesDTO = await _mediator.Send(new GetEmployeesQuery(filters));
+            var metadata = new Metadata
+            {
+                TotalCount = employeesDTO.TotalCount,
+                PageSize = employeesDTO.PageSize,
+                CurrentPage = employeesDTO.CurrentPage,
+                TotalPages = employeesDTO.TotalPages,
+                HasNextPage = employeesDTO.HasNextPage,
+                HasPreviousPage = employeesDTO.HasPreviousPage
+            };
+            var response = new ApiResponse<IEnumerable<GetEmployeesDTO>>(employeesDTO)
+            {
+                Metadata = metadata
+            };
+            return Ok(response);
 
         }
 

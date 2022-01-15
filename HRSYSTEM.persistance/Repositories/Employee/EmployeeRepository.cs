@@ -50,7 +50,7 @@ namespace HRSYSTEM.persistance.Repositories.Employee
 
         public async Task<IEnumerable<EmployeeEntity>> GetEmployees()
         {
-            var employees = await _context.Employees.ToListAsync();
+            var employees = await _context.Employees.Include(x => x.JobCatalog).ToListAsync();
             return employees;
         }
 

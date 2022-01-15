@@ -30,7 +30,7 @@ namespace HRSYSTEM.api.JwtConfiguration
                 {
                     OnAuthenticationFailed = context =>
                     {
-                        // If the token does'nt validate correctly
+                        // If the token doesn't validate correctly
                         Console.WriteLine($"OnAuthenticationFailed {context.Exception.Message}");
                         return Task.CompletedTask;
                     },

@@ -8,6 +8,8 @@ using MediatR;
 using System.Reflection;
 using Microsoft.AspNetCore.Authentication;
 using HRSYSTEM.persistance;
+using HRSYSTEM.application;
+using HRSYSTEM.domain;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -20,8 +22,8 @@ builder.Services.AddControllers(options =>
     options.Filters.Add<GlobalExceptionFilter>();
 }).AddNewtonsoftJson(options =>
 {
-    // Ignore loop reference
     options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
+    options.SerializerSettings.NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore;
 });
 
 // Add cors policy
@@ -35,9 +37,15 @@ builder.Services.AddCors(options => options.AddPolicy("HrsystemPolicy", builder 
 // Configure Auto Mappers
 builder.Services.AddAutoMapper(typeof(ApplicationMapper));
 
+// Configure Options
+builder.Services.Configure<PaginationOptions>(builder.Configuration.GetSection("Pagination"));
+
 // Configure Repositories
-builder.Services.AddTransient<IEmployeeRepository, EmployeeRepository>();
-builder.Services.AddTransient<IJobCatalogRepository, JobCatalogRepository>();
+builder.Services.AddScoped<IEmployeeRepository, EmployeeRepository>();
+builder.Services.AddScoped<IJobCatalogRepository, JobCatalogRepository>();
+
+// Configure Helpers
+builder.Services.AddScoped<IJwtHelper, JwtHelper>();
 
 // Add jwt token authentication
 builder.Services.AddTokenAuthentication(builder.Configuration);
@@ -61,6 +69,8 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 
 app.UseCors("HrsystemPolicy");
+
+app.UseAuthentication();
 
 app.UseAuthorization();
 

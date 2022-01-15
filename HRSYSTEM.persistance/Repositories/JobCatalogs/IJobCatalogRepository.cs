@@ -1,4 +1,5 @@
-﻿using System;
+﻿using HRSYSTEM.domain;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -11,5 +12,8 @@ namespace HRSYSTEM.persistance
     /// </summary>
     public interface IJobCatalogRepository
     {
+        Task CreateJobCatalog(JobCatalogEntity jobCatalog);
+        Task<IEnumerable<JobCatalogEntity>> GetJobCatalogs();
+
     }
 }

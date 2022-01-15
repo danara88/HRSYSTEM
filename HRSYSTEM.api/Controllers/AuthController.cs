@@ -1,10 +1,7 @@
-﻿using HRSYSTEM.domain;
-using Microsoft.AspNetCore.Http;
+﻿using HRSYSTEM.application;
+using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.IdentityModel.Tokens;
-using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
-using System.Text;
 
 namespace HRSYSTEM.api.Controllers
 {
@@ -14,46 +11,28 @@ namespace HRSYSTEM.api.Controllers
     [ApiController]
     public class AuthController : ControllerBase
     {
-        private IConfiguration _configuration;
+        private readonly IConfiguration _configuration;
+        private readonly IMediator _mediator;
 
-        public AuthController(IConfiguration configuration)
+        public AuthController(IConfiguration configuration, IMediator mediator)
         {
             _configuration = configuration;
+            _mediator = mediator;
         }
-
+        
+        /// <summary>
+        /// This action will log in the user
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
         [HttpGet]
+        [AllowAnonymous]
         [Route("~/api/auth/login")]
-        public string Login()
+        public async Task<ActionResult<AuthResponseDTO>> Login([FromBody] LoginUserCommand model)
         {
-            UserEntity userEntity = new UserEntity()
-            {
-                UserID = 1,
-                Name = "Daniel",
-                Surname = "Aranda",
-                Username = "daniel88",
-                Email = "daniel@hotmail.com",
-                Password="1234"
-            };
-            var token = BuildToken(userEntity);
-
-            return token;
-        }
-
-        private string BuildToken(UserEntity usuario)
-        {
-            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Auth:Jwt:Key"]));
-            var credentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
-            var claims = new[]
-            {
-                new Claim(ClaimTypes.Name, usuario.Surname)
-            };
-            var token = new JwtSecurityToken(_configuration["Auth:Jwt:Issuer"],
-                                             _configuration["Auth:Jwt:Audience"],
-                                             claims,
-                                             expires: DateTime.Now.AddMinutes(Convert.ToDouble(_configuration["Auth:Jwt:TokenExpirationInMinutes"])),
-                                             signingCredentials: credentials);
-
-            return new JwtSecurityTokenHandler().WriteToken(token);
+            if (!ModelState.IsValid) return BadRequest();
+            AuthResponseDTO response = await _mediator.Send(model);
+            return response;
         }
     }
 }
